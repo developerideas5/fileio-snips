@@ -1,0 +1,29 @@
+ try (FileWriter file = new FileWriter(path,false)) {
+      String json = appendJSON(contentId,params);
+      file.write(json,0,json.length());
+      file.flush();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+        try {
+      ObjectMapper mapper = new ObjectMapper();
+      mapper.writeValue(new File(resourceHelper.getWorkingDirFilePath(DOCUMENT_PATH)), appendJSON(contentId, params));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+    
+  private String appendJSON(Long contentId, String entities) throws IOException {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    FAQDataDocument existingData = mapper.readValue(resourceHelper.getInputStream(CONTENT_PATH), FAQDataDocument.class);
+    GuidelineDetailsDTO params = new Gson().fromJson(entities, GuidelineDetailsDTO.class);
+    existingData.getData()
+        .add(new FAQAttributesDocument(contentId, params.getTopic(), params.getCategory(), params.getDescription(), params.getNavigation()));
+    String json = new Gson().toJson(existingData);
+    LOG.info("json:-" + json);
+    return json;
+  }
+
+    
