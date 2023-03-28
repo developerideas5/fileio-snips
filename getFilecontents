@@ -1,0 +1,9 @@
+      BufferedReader result = new BufferedReader(new FileReader(path));
+      String currentReadingLine = result.readLine();
+      String originalFileContent = "";
+      LOG.info("on update:- ************************");
+      while (currentReadingLine != null) {
+        originalFileContent += currentReadingLine;
+        currentReadingLine = result.readLine();
+      }
+      LOG.info(originalFileContent);
